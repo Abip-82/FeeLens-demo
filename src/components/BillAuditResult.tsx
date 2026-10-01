@@ -17,6 +17,7 @@ import { BillAuditReport, FeeEvaluationStatus, Bill, BillComparison } from '../t
 import { Language, TRANSLATIONS, formatMonthInLanguage, formatGradeInLanguage, getLocalizedWhyExplanation } from '../utils/translations';
 import { ReportModal } from './ReportModal';
 import { BillComparisonCard } from './BillComparisonCard';
+import { AudioAuditSummary } from './AudioAuditSummary';
 
 interface BillAuditResultProps {
   report: BillAuditReport;
@@ -530,6 +531,14 @@ export const BillAuditResult: React.FC<BillAuditResultProps> = ({
           })}
         </div>
       </div>
+
+      {/* SHORT SUMMARY & SPOKEN NEPALI VOICE FEATURE AT THE END OF AUDIT */}
+      <AudioAuditSummary
+        report={report}
+        billingMonth={billingMonth}
+        comparison={comparison}
+        lang={lang}
+      />
 
       {/* Bottom Controls */}
       <div className="flex flex-wrap items-center justify-between gap-3 pt-2">

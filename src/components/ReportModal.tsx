@@ -20,9 +20,10 @@ import {
   ShieldAlert,
   ShieldCheck,
 } from 'lucide-react';
-import { Bill, BillComparison } from '../types';
+import { Bill, BillComparison, BillAuditReport } from '../types';
 import { Language, TRANSLATIONS, formatMonthInLanguage, formatGradeInLanguage, getLocalizedWhyExplanation } from '../utils/translations';
 import { calculateTuitionCeiling } from '../services/rulesEngine';
+import { AudioAuditSummary } from './AudioAuditSummary';
 
 interface ReportModalProps {
   bill: Bill;
@@ -678,6 +679,68 @@ ${parentName}
                   </div>
                 </div>
               )}
+
+              {/* SHORT SUMMARY & SPOKEN NEPALI VOICE FEATURE */}
+              <div className="print:hidden">
+                <AudioAuditSummary
+                  report={{
+                    matchedSchool: null,
+                    schoolMatchStatus: 'matched',
+                    schoolName: schoolDisplayName,
+                    municipality: municipalityDisplayName,
+                    schoolType: 'Private / Institutional',
+                    category: bill.schoolCategory,
+                    dataStatus: 'Demo dataset',
+                    rawGrade: bill.gradeRaw,
+                    gradeLevel: bill.gradeLevel,
+                    numericGrade: bill.gradeNumeric || null,
+                    monthlyTuitionCeiling: tuitionCeiling.ceiling,
+                    monthlyCeilingFormula: tuitionCeiling.formula,
+                    annualFeeCeiling: null,
+                    auditedFees: bill.extractedFees.map(f => ({
+                      id: f.id,
+                      originalLabel: f.originalLabel,
+                      feeName: f.normalizedTitle || f.originalLabel,
+                      normalizedFeeType: f.normalizedFeeType,
+                      amount: f.amount,
+                      status: f.status,
+                      statusLabel: f.statusLabel,
+                      applicableLimit: f.applicableLimit,
+                      difference: f.difference,
+                      shortExplanation: f.explanation || '',
+                      whyExplanation: {
+                        reasonHeadline: '',
+                        ruleExplanation: f.explanation || '',
+                        sourceMetadata: { sourceLabel: '', sourcePage: '' },
+                      },
+                    })),
+                    counts: {
+                      totalCharges: bill.extractedFees.length,
+                      withinLimits: bill.extractedFees.filter(f => f.status === 'within_limit').length,
+                      exceedsLimit: bill.extractedFees.filter(f => f.status === 'exceeds_limit').length,
+                      potentialDiscrepancies: bill.extractedFees.filter(f => f.status === 'potential_discrepancy').length,
+                      recognizedNoThreshold: bill.extractedFees.filter(f => f.status === 'no_numeric_rule' || f.status === 'recognized_heading').length,
+                      unableToVerify: 0,
+                    },
+                    totalBilled: bill.totalAmount,
+                    totalRecognizedCharges: totalRecognizedAmount,
+                    totalUnrecognizedCharges: totalExcessAmount,
+                    discrepancyList: flaggedFees.map(f => ({
+                      id: f.id,
+                      originalLabel: f.originalLabel,
+                      feeName: f.normalizedTitle,
+                      amount: f.amount,
+                      difference: f.difference || undefined,
+                      status: f.status,
+                      issue: f.explanation || '',
+                      recommendation: 'Check against municipal guidelines',
+                    })),
+                  }}
+                  billingMonth={bill.billingMonth}
+                  comparison={comparison}
+                  lang={lang}
+                />
+              </div>
 
               {/* Official Disclaimer */}
               <div className="p-4 sm:p-5 rounded-2xl bg-slate-100 border border-slate-200 text-xs text-slate-600 space-y-1">
