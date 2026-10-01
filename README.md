@@ -24,5 +24,4 @@ FeeLens is a tool built for Nepali parents to bring transparency to private scho
 * **Frontend:** React / Next.js, Tailwind CSS, Lucide Icons
 * **AI Model:** Gemini 1.5 Flash
 * **Backend:** Node.js / Next.js API Routes
-* **Database:** Firebase / Supabase
-* **PDF Generation:** `@react-pdf/renderer` or `jspdf`
+* **Database:** Firebase 
