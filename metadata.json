@@ -1,0 +1,6 @@
+{
+  "name": "FeeLens",
+  "description": "Understand your school bill. Know what you are paying for with clear fee breakdowns, login protection, and monthly bill comparisons.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
